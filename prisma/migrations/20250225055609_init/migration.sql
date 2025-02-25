@@ -1,9 +1,3 @@
--- CreateEnum
-CREATE TYPE "DemandLevel" AS ENUM ('HIGH', 'MEDIUM', 'LOW');
-
--- CreateEnum
-CREATE TYPE "MarketOutlook" AS ENUM ('POSITIVE', 'NEUTRAL', 'NEGATIVE');
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -22,24 +16,24 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "IndustryInsights" (
+CREATE TABLE "IndustryInsight" (
     "id" TEXT NOT NULL,
     "industry" TEXT NOT NULL,
     "salaryRanges" JSONB[],
     "growthRate" DOUBLE PRECISION NOT NULL,
-    "demandLevel" "DemandLevel" NOT NULL,
+    "demandLevel" TEXT NOT NULL,
     "topSkills" TEXT[],
-    "marketOutlook" "MarketOutlook" NOT NULL,
+    "marketOutlook" TEXT NOT NULL,
     "keyTrends" TEXT[],
-    "recommendedSKills" TEXT[],
+    "recommendedSkills" TEXT[],
     "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "nextUpdate" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "IndustryInsights_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "IndustryInsight_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Assements" (
+CREATE TABLE "Assessment" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "quizScore" DOUBLE PRECISION NOT NULL,
@@ -49,7 +43,7 @@ CREATE TABLE "Assements" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Assements_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Assessment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -71,8 +65,9 @@ CREATE TABLE "CoverLetter" (
     "userId" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "jobDescription" TEXT,
-    "companyName" TEXT,
+    "companyName" TEXT NOT NULL,
     "jobTitle" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'draft',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -86,13 +81,13 @@ CREATE UNIQUE INDEX "User_clerkUserId_key" ON "User"("clerkUserId");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "IndustryInsights_industry_key" ON "IndustryInsights"("industry");
+CREATE UNIQUE INDEX "IndustryInsight_industry_key" ON "IndustryInsight"("industry");
 
 -- CreateIndex
-CREATE INDEX "IndustryInsights_industry_idx" ON "IndustryInsights"("industry");
+CREATE INDEX "IndustryInsight_industry_idx" ON "IndustryInsight"("industry");
 
 -- CreateIndex
-CREATE INDEX "Assements_userId_idx" ON "Assements"("userId");
+CREATE INDEX "Assessment_userId_idx" ON "Assessment"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Resume_userId_key" ON "Resume"("userId");
@@ -101,10 +96,10 @@ CREATE UNIQUE INDEX "Resume_userId_key" ON "Resume"("userId");
 CREATE INDEX "CoverLetter_userId_idx" ON "CoverLetter"("userId");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_industry_fkey" FOREIGN KEY ("industry") REFERENCES "IndustryInsights"("industry") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_industry_fkey" FOREIGN KEY ("industry") REFERENCES "IndustryInsight"("industry") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Assements" ADD CONSTRAINT "Assements_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Assessment" ADD CONSTRAINT "Assessment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Resume" ADD CONSTRAINT "Resume_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

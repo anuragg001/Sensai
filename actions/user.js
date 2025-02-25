@@ -7,12 +7,10 @@ export async function updateUser(data) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unatuhrozied")
 
-    const user = await db.user.findUnique({
-        where: {
-            clerkUserId: userId,
-
-        },
-
+    const user =await db.user.findUnique({
+        where:{
+            clerkUserId:userId
+        }
     })
     if (!user) throw new Error("User doesn't exist");
 
@@ -27,15 +25,15 @@ export async function updateUser(data) {
                 }
             })
             // if industry  doesn't exist ,create it with default value - will replace it later with ai
-            if(!industryInsight){
+            if(!industryInsight ){
                 industryInsight=await tx.industryInsight.create({
                     data:{
                         industry:data.industry,
                         salaryRanges:[], 
                         growthRate:0,
-                        demandLevel:"Medium",
+                        demandLevel:"MEDIUM",
                         topSkills:[],
-                        marketOutlook:"Neutral",
+                        marketOutlook:"NEUTRAL",
                         keyTrends:[],
                         recommendedSkills:[],
                         nextUpdate:new Date(Date.now()+7*24*60*60*1000 )
@@ -63,7 +61,7 @@ export async function updateUser(data) {
         return result.user;
     } catch (error) {
         console.error("Error while updating user and Industry",error.message);
-        throw new Error("Failed to update profile")
+        throw new Error("Failed to update profile"+error.message)
 
     }
 }
