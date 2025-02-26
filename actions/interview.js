@@ -16,9 +16,13 @@ export async function generateQuiz() {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized")
 
-    const user = await db.user.create({
+    const user = await db.user.findUnique({
         where: {
             clerkUserId: userId
+        },
+        select:{
+            industry:true,
+            skills:true
         }
     })
     if (!user) throw new Error("User Not Found");
@@ -71,7 +75,7 @@ export async function saveQuizResult(questions, answers, score) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized")
 
-    const user = await db.user.create({
+    const user = await db.user.findUnique({
         where: {
             clerkUserId: userId
         }
@@ -129,7 +133,7 @@ export async function saveQuizResult(questions, answers, score) {
 
     //now lets store it in our database feed it to our asseesment table
     try {
-        const asseesment= await db.create({
+        const assessment = await db.assessment.create({
             data:{
                 userId:user.id,
                 quizScore:score,
@@ -138,7 +142,7 @@ export async function saveQuizResult(questions, answers, score) {
                 improvementTip,
             }
         });
-        return asseesment;
+        return assessment;
     } catch (error) {
         console.error("Error saving Quiz result",error)
         throw new Error("failed to save result")
