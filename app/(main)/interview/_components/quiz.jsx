@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react"
 import { BarLoader } from "react-spinners";
 import { toast } from "sonner";
+import QuizResult from "./quiz-result";
 
 
 const Quiz = () => {
@@ -96,6 +97,13 @@ const Quiz = () => {
                 <QuizResult result ={resultData} onStartNew={startNewQuiz}/>
             </div>
         )
+    }
+    const startNewQuiz=()=>{
+        setCurrentQuestion(0)
+        setAnswers([])
+        setShowExplanation(false)
+        generateQuizFn()
+        setResultData(null)
     }
 
 
