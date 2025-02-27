@@ -90,6 +90,13 @@ const Quiz = () => {
         return <BarLoader className="mt-4" width={"100%"} color="gray" />;
     }
 
+    const startNewQuiz=()=>{
+        setCurrentQuestion(0)
+        setAnswers([])
+        setShowExplanation(false)
+        generateQuizFn()
+        setResultData(null)
+    }
     //show result data if quiz is completed
     if(resultData){
         return(
@@ -97,13 +104,6 @@ const Quiz = () => {
                 <QuizResult result ={resultData} onStartNew={startNewQuiz}/>
             </div>
         )
-    }
-    const startNewQuiz=()=>{
-        setCurrentQuestion(0)
-        setAnswers([])
-        setShowExplanation(false)
-        generateQuizFn()
-        setResultData(null)
     }
 
 
@@ -169,7 +169,7 @@ const Quiz = () => {
                     <Button
                         onClick={() => setShowExplanation(true)}
                         variant="outline"
-                        diabled={!answers[currentQuestion]}
+                        disabled={!answers[currentQuestion]}
                     >
                         Show Explanation
                     </Button>
@@ -178,7 +178,7 @@ const Quiz = () => {
                 <Button
                     onClick={handleNext}
                     className="ml-auto"
-                    diabled={!answers[currentQuestion] || savingResult}
+                    disabled={!answers[currentQuestion] || savingResult}
                 >
                     {
                         savingResult && (

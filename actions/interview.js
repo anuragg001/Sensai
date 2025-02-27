@@ -148,3 +148,34 @@ export async function saveQuizResult(questions, answers, score) {
         throw new Error("failed to save result")
     }
 }
+
+
+export async function getAssessments(){
+    const {userId}=await auth()
+    if(!userId) throw new Error("Unauthorized")
+
+        const user = await db.user.findUnique({
+            where:{
+                clerkUserId:userId
+            }
+        })
+    if(!user) throw new Error ("User not found")
+
+
+    try {
+        const assessments=await db.assessment.findMany({
+            where:{
+                userId:user.id
+
+            },
+            orderBy:{
+                createdAt:"asc"
+            }
+        })
+        return assessments
+    } catch (error) {
+        console.error("Error while fetching the assessments")
+        throw new Error("Failed to fetch assessment")
+        
+    }
+}

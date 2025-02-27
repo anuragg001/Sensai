@@ -14,7 +14,7 @@ const QuizResult = ({ result, hideStartNew = false, onStartNew }) => {
                 <Trophy className='h-6 w-6 text-yellow-500' />
                 Quiz Result
             </h1>
-            <CardContent>
+            <CardContent className="space-y-6">
                 <div className='text-center space-y-2'>
                     <h3 className='text-3xl font-bold'>{result.quizScore.toFixed(1)}%</h3>
                     <Progress value={result.quizScore} className='w-full' />
@@ -34,8 +34,8 @@ const QuizResult = ({ result, hideStartNew = false, onStartNew }) => {
                     <h3 className='font-medium'>
                         Question Review
                     </h3>
-                    {result.questions.map((q) => (
-                        <div className='border rounded-lg p-4 space-y-2'>
+                    {result.questions.map((q,index) => (
+                        <div className='border rounded-lg p-4 space-y-2' key={index}>
                             <div className='flex items-start justify-between gap-2'>
                                 <p className='font-medium'>{q.question}</p>
                                 {q.isCorrect ? (
