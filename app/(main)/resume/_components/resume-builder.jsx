@@ -16,6 +16,7 @@ import { entriesToMarkdown } from "@/app/lib/helper"
 import MDEditor from "@uiw/react-md-editor"
 import { useUser } from "@clerk/nextjs"
 import html2pdf from "html2pdf.js/dist/html2pdf.min.js"
+import { toast } from "sonner"
 
 const ResumeBuilder = ({ initialContent }) => {
     const [activeTab, setActiveTab] = useState("edit")
@@ -80,6 +81,22 @@ const ResumeBuilder = ({ initialContent }) => {
             .join("\n\n");
     }
 
+    useEffect(()=>{
+        if(saveResult && !isSaving){
+            toast.success("Resume saved successfully!")
+        }
+        if(saveError){
+            toast.error(saveError.message || "Failed to save resume")
+        }
+    },[saveError,saveResult,isSaving])
+
+    const onSubmit = async () => {
+        try {
+            await saveResumeFn(previewContent)
+        } catch (error) {
+            console.error("Error while saving:",error)
+        }
+    }
 
     const generatePDF = async () => {
         setIsGenertaing(true)
@@ -95,8 +112,8 @@ const ResumeBuilder = ({ initialContent }) => {
             }
             await html2pdf().set(opt).from(element).save();
         } catch (error) {
-            console.error("PDF generation error:",error)
-        }finally{
+            console.error("PDF generation error:", error)
+        } finally {
             setIsGenertaing(false);
         }
     }
@@ -106,7 +123,7 @@ const ResumeBuilder = ({ initialContent }) => {
         if (initialContent) setActiveTab("preview")
     }, [initialContent])
 
-    const onSubmit = async (data) => { }
+
 
 
     return (
@@ -114,9 +131,20 @@ const ResumeBuilder = ({ initialContent }) => {
             <div className="flex flex-col md:flex-row justify-between items-center gap-2">
                 <h1 className="font-bold gradient-title text-5xl md:text-6xl">Resume Builder</h1>
                 <div className="space-x-2">
-                    <Button variant={"destructive"}>
-                        <Save className="h-4 w-4" />
-                        Save
+                    <Button variant={"destructive"}
+                        disabled={isGenerating}
+                        onClick={onSubmit}>
+                        {isSaving ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Saving...
+                            </>
+                        ) : (
+                            <>
+                                <Save className="h-4 w-4" />
+                                Save
+                            </>
+                        )}
                     </Button>
                     <Button onClick={generatePDF} disabled={isGenerating}>
                         {isGenerating ? (
@@ -141,7 +169,7 @@ const ResumeBuilder = ({ initialContent }) => {
                 </TabsList>
 
                 <TabsContent value="edit">
-                    <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+                    <form className="space-y-8">
                         <div className="space-y-4">
                             <h3 className="text-lg font-medium">Contact Information</h3>
 
