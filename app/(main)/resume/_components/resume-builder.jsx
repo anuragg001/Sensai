@@ -8,18 +8,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import useFetch from "@/hooks/use-fetch"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AlertTriangle, Download, Edit, Monitor, Save } from "lucide-react"
+import { AlertTriangle, Download, Edit, Loader2, Monitor, Save } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import EntryForm from "./entry-form"
 import { entriesToMarkdown } from "@/app/lib/helper"
 import MDEditor from "@uiw/react-md-editor"
 import { useUser } from "@clerk/nextjs"
+import html2pdf from "html2pdf.js/dist/html2pdf.min.js"
 
 const ResumeBuilder = ({ initialContent }) => {
     const [activeTab, setActiveTab] = useState("edit")
     const [resumeMode, setResumeMode] = useState("preview")
     const [previewContent, setPreviewContent] = useState(initialContent)
+    const [isGenerating, setIsGenertaing] = useState(false);
     const { user } = useUser();
 
 
@@ -79,6 +81,26 @@ const ResumeBuilder = ({ initialContent }) => {
     }
 
 
+    const generatePDF = async () => {
+        setIsGenertaing(true)
+        try {
+            const element = document.getElementById("resume-pdf")
+            const opt = {
+                margin: [15, 15],
+                filename: "resume.pdf",
+                image: { type: "jpeg", quality: 0.8 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+
+            }
+            await html2pdf().set(opt).from(element).save();
+        } catch (error) {
+            console.error("PDF generation error:",error)
+        }finally{
+            setIsGenertaing(false);
+        }
+    }
+
     //if resume is alrady present
     useEffect(() => {
         if (initialContent) setActiveTab("preview")
@@ -96,9 +118,18 @@ const ResumeBuilder = ({ initialContent }) => {
                         <Save className="h-4 w-4" />
                         Save
                     </Button>
-                    <Button>
-                        <Download className="h-4 w-4" />
-                        Download pdf
+                    <Button onClick={generatePDF} disabled={isGenerating}>
+                        {isGenerating ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Genrating PDF...
+                            </>
+                        ) : (
+                            <>
+                                <Download className="h-4 w-4" />
+                                Download PDF
+                            </>
+                        )}
                     </Button>
                 </div>
             </div>
@@ -307,6 +338,18 @@ const ResumeBuilder = ({ initialContent }) => {
                             preview={resumeMode}
                             value={previewContent}
                             onChange={setPreviewContent} />
+                    </div>
+                    <div className="hidden">
+                        <div id="resume-pdf">
+                            <MDEditor.Markdown
+                                source={previewContent}
+                                style={{
+                                    background: "white",
+                                    color: "black"
+                                }}
+                            />
+                        </div>
+
                     </div>
                 </TabsContent>
             </Tabs>
