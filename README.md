@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Career Coach Platform
 
-## Getting Started
+A clean, AI-powered career coaching platform that offers interview preparation, cover letter generation, real-time industry insights, and mock interview simulations.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Interview Prep:** Access tailored interview questions and answers to boost your confidence.
+- **Cover Letter Generator:** Create professional cover letters using AI-driven content suggestions.
+- **Industry Insights:** Get weekly updated insights on market trends and industry news.
+- **Mock Interviews:** Practice with simulated interviews designed to mirror real-world scenarios.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Frontend
+- **Next.js & React:** For building a dynamic, performant, and modern user interface.
+- **JavaScript:** Core programming language for interactive web features.
+- **shadcn:** UI components and design system for a sleek, cohesive look.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Backend
+- **Next.js (API routes):** Handling server-side logic and API endpoints.
+- **Inngest:** Scheduling and executing background jobs (e.g., weekly industry insights updates).
+- **Clerk:** User authentication and session management.
+- **Google Gemini API:** AI services powering content generation and personalized coaching features.
 
-## Learn More
+### Database
+- **Prisma:** ORM for managing database schema and interactions.
+- **NeonDB:** Cloud-native database solution for reliable data storage.
 
-To learn more about Next.js, take a look at the following resources:
+## Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Clone the Repository:**
+   ```bash
+   git clone https://your-repository-url.git
+   cd your-project-directory

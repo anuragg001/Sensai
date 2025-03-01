@@ -16,9 +16,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider appearance={{
-     appearance:neobrutalism,
-    }}>
+    <ClerkProvider
+    appearance={{
+      baseTheme:dark,
+    }}
+  >
 
       <html lang="en" suppressHydrationWarning>
         <body
